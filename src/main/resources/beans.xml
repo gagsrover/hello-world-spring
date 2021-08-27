@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	
+
+	<bean id="person" class="de.gagan.spring.domain.Person"
+		init-method="onCreate" destroy-method="onDestroy"
+		factory-method="getInstance">
+		<constructor-arg name="id" value="1"/>
+		<constructor-arg name="name" value="Gagan"/>
+		<property name="taxId" value="123456"/>
+		<property name="address" ref="address"/>
+	</bean>
+	
+	<bean id="person2" class="de.gagan.spring.domain.Person"
+		init-method="onCreate" destroy-method="onDestroy"
+		factory-method="createPerson" factory-bean="personFactory">
+		<constructor-arg name="id" value="2"/>
+		<constructor-arg name="name" value="Harsh"/>
+		<property name="taxId" value="156"/>
+		<property name="address" ref="address"/>
+	</bean>
+
+	<bean id="address" class="de.gagan.spring.domain.Address">
+		<constructor-arg name="street" value="Viman Nagar"></constructor-arg>
+		<constructor-arg value="411014" name="postcode"></constructor-arg>
+	</bean>
+	
+	
+	
+	
+	<bean id="personFactory"
+		class="de.gagan.spring.domain.PersonFactory">
+	</bean>
+	
+	<context:property-placeholder
+		location="de/gagan/spring/props/jdbc.properties" />
+	<context:component-scan base-package="de.gagan.spring.*"></context:component-scan>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+</beans>
